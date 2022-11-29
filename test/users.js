@@ -16,7 +16,7 @@ describe ('Users',()=>{
         });
          */
        return request
-        .get('v2/users?access-token=${TOKEN}').then((res)=>{
+        .get('v2/users?access-token='+TOKEN).then((res)=>{
            // console.log(res.body);
             expect(res.body).to.not.be.empty;
         });
@@ -24,9 +24,22 @@ describe ('Users',()=>{
  
     it('GET /users/:id',()=>{
         return request
-        .get('v2/users/5509?access-token=${TOKEN}').then((res)=>{
+        .get('v2/users/5509?access-token='+TOKEN).then((res)=>{
             //console.log(res.body.id);
             expect(res.body.id).to.be.eq(5509);
+        });
+    });
+    it('GET /users with query params',()=>{
+        const url = 'v2/users?access-token='+TOKEN+'&gender=female&status=active'
+        return request
+        .get(url).then((res)=>{
+            //console.log(url);
+            expect(res.body).to.be.not.empty;
+            res.body.forEach(element => {
+                expect(element.gender).to.be.eq('female');
+                expect(element.status).to.be.eq('active');
+               
+            });
         });
     });
     
