@@ -1,6 +1,6 @@
 import { describe } from "mocha";
 import supertest from "supertest";
-const request = supertest('https://gorest.co.in/public/');
+const request = supertest('https://gorest.co.in/public/v2/');
 
 import { expect } from "chai";
 
@@ -16,7 +16,7 @@ describe ('Users',()=>{
         });
          */
        return request
-        .get('v2/users?access-token='+TOKEN).then((res)=>{
+        .get('users?access-token='+TOKEN).then((res)=>{
            // console.log(res.body);
             expect(res.body).to.not.be.empty;
         });
@@ -24,13 +24,13 @@ describe ('Users',()=>{
  
     it('GET /users/:id',()=>{
         return request
-        .get('v2/users/5509?access-token='+TOKEN).then((res)=>{
+        .get('users/3431?access-token='+TOKEN).then((res)=>{
             //console.log(res.body.id);
-            expect(res.body.id).to.be.eq(5509);
+            expect(res.body.id).to.be.eq(3431);
         });
     });
     it('GET /users with query params',()=>{
-        const url = 'v2/users?access-token='+TOKEN+'&gender=female&status=active'
+        const url = 'users?access-token='+TOKEN+'&gender=female&status=active'
         return request
         .get(url).then((res)=>{
             //console.log(url);
@@ -41,6 +41,21 @@ describe ('Users',()=>{
                
             });
         });
+    });
+    it.only('POST /users',()=>{
+        const data = {
+            'email':'test'+Math.floor(Math.random()*100)+'@testi.coma',
+            'name':'testi test',
+            'gender':'male',
+            'status':'inactive'
+        };
+        return request
+        .post('users').set('Authorization',`Bearer ${TOKEN}`)
+        .send(data)
+        .then((res)=>{
+            console.log(res.statusCode);
+            expect(res.body).to.deep.include(data);
+        })
     });
     
 });
